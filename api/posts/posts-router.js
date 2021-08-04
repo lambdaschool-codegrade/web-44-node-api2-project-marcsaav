@@ -50,6 +50,26 @@ postsRouter.post('/', async (req, res) => {
 })
 
 // [PUT] Update Post with specified ID
+
+
+postsRouter.put('/:id', async (req, res) => {
+    try {
+        let { id } = req.params
+        let { title, contents } = req.body
+        let postToUpdate = await Posts.findById(id)
+        if(!postToUpdate) {
+            res.status(404).json({ message: "The post with the specified ID does not exist" })
+        } else if(!title || !contents) {
+            res.status(400).json({ message: "Please provide title and contents for the post" })
+        } else {
+            await Posts.update(id, req.body)
+            res.status(200).json({id: Number(id), ...req.body})
+        }
+    } catch (err) {
+        res.status(500).json({ message: "The post information could not be modified" })
+    }
+})
+
 // [DELETE] Post with specified ID
 // [GET] Comments of Post with specified ID
 
