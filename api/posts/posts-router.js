@@ -71,6 +71,23 @@ postsRouter.put('/:id', async (req, res) => {
 })
 
 // [DELETE] Post with specified ID
+
+postsRouter.delete('/:id', async (req, res) => {
+    try {
+        let { id } = req.params
+        let postToDelete = await Posts.findById(id)
+        if(!postToDelete) {
+            res.status(404).json({ message: "The post with the specified ID does not exist" })
+        } else {
+            await Posts.remove(id)
+            res.status(200).json(postToDelete)
+        }
+    } catch(err) {
+        res.status(500).json({ message: "The post could not be removed" })
+    }
+})
+
+
 // [GET] Comments of Post with specified ID
 
 module.exports = postsRouter
